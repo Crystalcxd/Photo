@@ -8,6 +8,11 @@
 
 #import "AppDelegate.h"
 
+#import "SCNavigationController.h"
+#import "SCCaptureCameraController.h"
+
+#import "DCIntrospect.h"
+
 @interface AppDelegate ()
 
 @end
@@ -17,6 +22,19 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    SCCaptureCameraController *con = [[SCCaptureCameraController alloc] init];
+    SCNavigationController *VC = [[SCNavigationController alloc] init];
+    [VC setViewControllers:[NSArray arrayWithObject:con]];
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+
+    self.window.rootViewController = VC;
+    [self.window makeKeyAndVisible];
+    
+#if TARGET_IPHONE_SIMULATOR
+    [[DCIntrospect sharedIntrospector] start];
+#endif
     return YES;
 }
 
