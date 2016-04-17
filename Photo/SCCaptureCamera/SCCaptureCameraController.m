@@ -136,10 +136,8 @@
     [manager configureWithParentLayer:self.view previewRect:_previewRect];
     self.captureManager = manager;
     
-    
     self.coverView = [[CoverView alloc] initWithFrame:_previewRect Index:2];
     [self.view addSubview:self.coverView];
-
     
     [self addTopViewWithText:@"拍照"];
     [self addbottomContainerView];
@@ -255,8 +253,6 @@
 
 //bottomContainerView，总体
 - (void)addbottomContainerView {
-    
-    CGFloat bottomY = _captureManager.previewLayer.frame.origin.y + _captureManager.previewLayer.frame.size.height;
     CGRect bottomFrame = CGRectMake(0, SC_DEVICE_SIZE.height - CAMERA_BOTTOMVIEW_HEIGHT, SC_DEVICE_SIZE.width, CAMERA_BOTTOMVIEW_HEIGHT);
     
     UIView *view = [[UIView alloc] initWithFrame:bottomFrame];
@@ -269,11 +265,10 @@
 - (void)addCameraMenuView {
     
     //拍照按钮
-    CGFloat downH = (isHigherThaniPhone4_SC ? CAMERA_MENU_VIEW_HEIGH : 0);
     CGFloat cameraBtnLength = 90;
     [self buildButton:CGRectMake((SC_DEVICE_SIZE.width - cameraBtnLength) / 2, (_bottomContainerView.frame.size.height - cameraBtnLength) / 2 , cameraBtnLength, cameraBtnLength)
-         normalImgStr:@"shot.png"
-      highlightImgStr:@"shot_h.png"
+         normalImgStr:@"takephoto"
+      highlightImgStr:@"takephoto_press"
        selectedImgStr:@""
                action:@selector(takePictureBtnPressed:)
            parentView:_bottomContainerView];
@@ -622,18 +617,7 @@ void c_slideAlpha() {
         [self.view addSubview:imageView];
 
         [self.takePhotoDic setObject:@"1" forKey:@(index)];
-        
-//        if (self.picCount == 4) {
-//        }else{
-//            imageView = [self.view viewWithTag:2000];
-//            
-//            if (imageView) {
-//                UIImage *finalImg = [self addImageview:destImg toImage:imageView.image type:self.picCount];
-//                
-//                imageView.image = finalImg;
-//            }
-//        }
-        
+                
         if (index + 1 == self.picCount) {
             
             //your code 0
@@ -700,24 +684,6 @@ void c_slideAlpha() {
     CGSize size= CGSizeMake( image1.size.width,image1.size.height);
     UIGraphicsBeginImageContext(size);
     
-    // Draw image2
-//    switch (type) {
-//        case 4:
-//            [image2 drawInRect:CGRectMake(0, 0, image1.size.width * 0.5, image1.size.height * 0.5)];
-//            break;
-//        case 3:
-//            [image2 drawInRect:CGRectMake(image1.size.width * 0.5, 0, image1.size.width * 0.5, image1.size.height * 0.5)];
-//            break;
-//        case 2:
-//            [image2 drawInRect:CGRectMake(0, image1.size.height * 0.5, image1.size.width * 0.5, image1.size.height * 0.5)];
-//            break;
-//        case 1:
-//            [image2 drawInRect:CGRectMake(image1.size.width * 0.5, image1.size.height * 0.5, image1.size.width * 0.5, image1.size.height * 0.5)];
-//            break;
-//        default:
-//            break;
-//    }
-    
     [image2 drawInRect:CGRectMake(0, 0, image1.size.width, image1.size.height)];
 
     // Draw image1
@@ -738,12 +704,16 @@ void c_slideAlpha() {
 - (void)dismissBtnPressed:(id)sender {
     if (self.navigationController) {
         if (self.navigationController.viewControllers.count == 1) {
-            [self.navigationController dismissModalViewControllerAnimated:YES];
+            [self.navigationController dismissViewControllerAnimated:YES completion:^{
+                
+            }];
         } else {
             [self.navigationController popViewControllerAnimated:YES];
         }
     } else {
-        [self dismissModalViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:^{
+            
+        }];
     }
 }
 
