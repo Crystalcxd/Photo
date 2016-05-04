@@ -27,11 +27,12 @@
 #define SWITCH_SHOW_DEFAULT_IMAGE_FOR_NONE_CAMERA   1   //没有拍照功能的设备，是否给一张默认图片体验一下
 
 //height
-#define CAMERA_TOPVIEW_HEIGHT   44  //title
+#define CAMERA_TOPVIEW_HEIGHT   66  //title
 #define CAMERA_BOTTOMVIEW_HEIGHT   120  //title
 #define CAMERA_MENU_VIEW_HEIGH  44  //menu
 
 //color
+#define bottomContainerView_COLOR     [UIColor colorWithRed:255/255.0f green:255/255.0f blue:255/255.0f alpha:1.f]       //bottomContainerView
 #define bottomContainerView_UP_COLOR     [UIColor colorWithRed:51/255.0f green:51/255.0f blue:51/255.0f alpha:1.f]       //bottomContainerView的上半部分
 #define bottomContainerView_DOWN_COLOR   [UIColor colorWithRed:68/255.0f green:68/255.0f blue:68/255.0f alpha:1.f]       //bottomContainerView的下半部分
 #define DARK_GREEN_COLOR        [UIColor colorWithRed:10/255.0f green:107/255.0f blue:42/255.0f alpha:1.f]    //深绿色
@@ -231,14 +232,14 @@
         CGRect topFrame = CGRectMake(0, 0, SC_DEVICE_SIZE.width, CAMERA_TOPVIEW_HEIGHT);
         
         UIView *tView = [[UIView alloc] initWithFrame:topFrame];
-        tView.backgroundColor = [UIColor clearColor];
+        tView.backgroundColor = [UIColor whiteColor];
         [self.view addSubview:tView];
         self.topContainerView = tView;
         
         UIView *emptyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, topFrame.size.width, topFrame.size.height)];
         emptyView.backgroundColor = [UIColor blackColor];
         emptyView.alpha = 0.4f;
-        [_topContainerView addSubview:emptyView];
+//        [_topContainerView addSubview:emptyView];
         
         topFrame.origin.x += 10;
         UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 100, topFrame.size.height)];
@@ -256,38 +257,14 @@
     CGRect bottomFrame = CGRectMake(0, SC_DEVICE_SIZE.height - CAMERA_BOTTOMVIEW_HEIGHT, SC_DEVICE_SIZE.width, CAMERA_BOTTOMVIEW_HEIGHT);
     
     UIView *view = [[UIView alloc] initWithFrame:bottomFrame];
-    view.backgroundColor = bottomContainerView_UP_COLOR;
+    view.backgroundColor = bottomContainerView_COLOR;
     [self.view addSubview:view];
     self.bottomContainerView = view;
 }
 
-//拍照菜单栏
-- (void)addCameraMenuView {
-    
-    //拍照按钮
-    CGFloat cameraBtnLength = 90;
-    [self buildButton:CGRectMake((SC_DEVICE_SIZE.width - cameraBtnLength) / 2, (_bottomContainerView.frame.size.height - cameraBtnLength) / 2 , cameraBtnLength, cameraBtnLength)
-         normalImgStr:@"takephoto"
-      highlightImgStr:@"takephoto_press"
-       selectedImgStr:@""
-               action:@selector(takePictureBtnPressed:)
-           parentView:_bottomContainerView];
-    
-    
-    //拍照的菜单栏view（屏幕高度大于480的，此view在上面，其他情况在下面）
-    CGFloat menuViewY = (isHigherThaniPhone4_SC ? SC_DEVICE_SIZE.height - CAMERA_MENU_VIEW_HEIGH : 0);
-    UIView *menuView = [[UIView alloc] initWithFrame:CGRectMake(0, menuViewY, self.view.frame.size.width, CAMERA_MENU_VIEW_HEIGH)];
-    menuView.backgroundColor = (isHigherThaniPhone4_SC ? bottomContainerView_DOWN_COLOR : [UIColor clearColor]);
-//    [self.view addSubview:menuView];
-    self.cameraMenuView = menuView;
-    
-    
-    
-//    [self addMenuViewButtons];
-}
-
-//拍照菜单栏上的按钮
-- (void)addMenuViewButtons {
+//顶部栏按钮
+- (void)addTopMenuView
+{
     NSMutableArray *normalArr = [[NSMutableArray alloc] initWithObjects:@"close_cha.png", @"camera_line.png", @"switch_camera.png", @"flashing_off.png", nil];
     NSMutableArray *highlightArr = [[NSMutableArray alloc] initWithObjects:@"close_cha_h.png", @"", @"", @"", nil];
     NSMutableArray *selectedArr = [[NSMutableArray alloc] initWithObjects:@"", @"camera_line_h.png", @"switch_camera_h.png", @"", nil];
@@ -296,7 +273,7 @@
     
     CGFloat eachW = SC_DEVICE_SIZE.width / actionArr.count;
     
-    [SCCommon drawALineWithFrame:CGRectMake(eachW, 0, 1, CAMERA_MENU_VIEW_HEIGH) andColor:rgba_SC(102, 102, 102, 1.0000) inLayer:_cameraMenuView.layer];
+    //    [SCCommon drawALineWithFrame:CGRectMake(eachW, 0, 1, CAMERA_MENU_VIEW_HEIGH) andColor:rgba_SC(102, 102, 102, 1.0000) inLayer:_cameraMenuView.layer];
     
     
     //屏幕高度大于480的，后退按钮放在_cameraMenuView；小于480的，放在_bottomContainerView
@@ -315,6 +292,51 @@
         btn.showsTouchWhenHighlighted = YES;
         
         [_cameraBtnSet addObject:btn];
+    }
+}
+
+//底部栏
+- (void)addCameraMenuView {
+    
+    //拍照按钮
+    CGFloat cameraBtnLength = 90;
+    [self buildButton:CGRectMake((SC_DEVICE_SIZE.width - cameraBtnLength) / 2, (_bottomContainerView.frame.size.height - cameraBtnLength) / 2 , cameraBtnLength, cameraBtnLength)
+         normalImgStr:@"takephoto"
+      highlightImgStr:@"takephoto_press"
+       selectedImgStr:@""
+               action:@selector(takePictureBtnPressed:)
+           parentView:_bottomContainerView];
+    
+    
+    [self addMenuViewButtons];
+}
+
+//底部栏按钮
+- (void)addMenuViewButtons {
+    NSMutableArray *normalArr = [[NSMutableArray alloc] initWithObjects:@"photo", @"Rectangle", nil];
+    NSMutableArray *highlightArr = [[NSMutableArray alloc] initWithObjects:@"photo_press", @"Rectangle_press", nil];
+    NSMutableArray *selectedArr = [[NSMutableArray alloc] initWithObjects:@"photo_press", @"Rectangle_press", nil];
+    
+    NSMutableArray *actionArr = [[NSMutableArray alloc] initWithObjects:@"imagePickerBtnPressed:", @"imagePickerBtnPressed:", nil];
+    CGFloat eachW = 21;
+    CGFloat eachH = 24;
+    
+    //    [SCCommon drawALineWithFrame:CGRectMake(eachW, 0, 1, CAMERA_MENU_VIEW_HEIGH) andColor:rgba_SC(102, 102, 102, 1.0000) inLayer:_cameraMenuView.layer];
+    
+    
+    //屏幕高度大于480的，后退按钮放在_cameraMenuView；小于480的，放在_bottomContainerView
+    for (int i = 0; i < actionArr.count; i++) {
+        
+        UIButton * btn = [self buildButton:CGRectMake(SC_DEVICE_SIZE.width * 0.5 - 102 - 10 + 102 * 2 * i, CGRectGetHeight(_bottomContainerView.frame) * 0.5 - 12, eachW, eachH)
+                              normalImgStr:[normalArr objectAtIndex:i]
+                           highlightImgStr:[highlightArr objectAtIndex:i]
+                            selectedImgStr:[selectedArr objectAtIndex:i]
+                                    action:NSSelectorFromString([actionArr objectAtIndex:i])
+                                parentView:_bottomContainerView];
+        
+        btn.showsTouchWhenHighlighted = YES;
+        
+        //        [_cameraBtnSet addObject:btn];
     }
 }
 
@@ -617,7 +639,7 @@ void c_slideAlpha() {
         [self.view addSubview:imageView];
 
         [self.takePhotoDic setObject:@"1" forKey:@(index)];
-                
+        
         if (index + 1 == self.picCount) {
             
             //your code 0
@@ -735,6 +757,11 @@ void c_slideAlpha() {
     [_captureManager switchFlashMode:sender];
 }
 
+//拍照界面，选择照片
+- (void)imagePickerBtnPressed:(UIButton*)sender {
+    
+}
+
 #pragma mark -------------pinch camera---------------
 //伸缩镜头
 - (void)handlePinch:(UIPinchGestureRecognizer*)gesture {
@@ -849,4 +876,10 @@ void c_slideAlpha() {
 }
 #endif
 
+- (BOOL)prefersStatusBarHidden
+{
+    // iOS7后,[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+    // 已经不起作用了
+    return YES;
+}
 @end
