@@ -265,11 +265,12 @@
 //顶部栏按钮
 - (void)addTopMenuView
 {
-    NSMutableArray *normalArr = [[NSMutableArray alloc] initWithObjects:@"close_cha.png", @"camera_line.png", @"switch_camera.png", @"flashing_off.png", nil];
-    NSMutableArray *highlightArr = [[NSMutableArray alloc] initWithObjects:@"close_cha_h.png", @"", @"", @"", nil];
-    NSMutableArray *selectedArr = [[NSMutableArray alloc] initWithObjects:@"", @"camera_line_h.png", @"switch_camera_h.png", @"", nil];
+    NSMutableArray *frameArr = [[NSMutableArray alloc] initWithObjects:CGRectMake(<#CGFloat x#>, <#CGFloat y#>, <#CGFloat width#>, <#CGFloat height#>), nil]
+    NSMutableArray *normalArr = [[NSMutableArray alloc] initWithObjects:@"cancel", @"+", @"lens", @"flashlight", nil];
+    NSMutableArray *highlightArr = [[NSMutableArray alloc] initWithObjects:@"cancel_press", @"", @"", @"", nil];
+    NSMutableArray *selectedArr = [[NSMutableArray alloc] initWithObjects:@"", @"+_press", @"lens_press", @"flashlight_press", nil];
     
-    NSMutableArray *actionArr = [[NSMutableArray alloc] initWithObjects:@"dismissBtnPressed:", @"gridBtnPressed:", @"switchCameraBtnPressed:", @"flashBtnPressed:", nil];
+    NSMutableArray *actionArr = [[NSMutableArray alloc] initWithObjects:@"dismissBtnPressed:", @"moreBtnPressed:", @"switchCameraBtnPressed:", @"flashBtnPressed:", nil];
     
     CGFloat eachW = SC_DEVICE_SIZE.width / actionArr.count;
     
@@ -280,14 +281,13 @@
     for (int i = 0; i < actionArr.count; i++) {
         
         CGFloat theH = (!isHigherThaniPhone4_SC && i == 0 ? _bottomContainerView.frame.size.height : CAMERA_MENU_VIEW_HEIGH);
-        UIView *parent = (!isHigherThaniPhone4_SC && i == 0 ? _bottomContainerView : _cameraMenuView);
         
         UIButton * btn = [self buildButton:CGRectMake(eachW * i, 0, eachW, theH)
                               normalImgStr:[normalArr objectAtIndex:i]
                            highlightImgStr:[highlightArr objectAtIndex:i]
                             selectedImgStr:[selectedArr objectAtIndex:i]
                                     action:NSSelectorFromString([actionArr objectAtIndex:i])
-                                parentView:parent];
+                                parentView:_topContainerView];
         
         btn.showsTouchWhenHighlighted = YES;
         
@@ -739,6 +739,10 @@ void c_slideAlpha() {
     }
 }
 
+//拍照界面，更多按钮
+- (void)moreBtnPressed:(UIButton*)sender {
+    sender.selected = !sender.selected;
+}
 
 //拍照页面，网格按钮
 - (void)gridBtnPressed:(UIButton*)sender {
